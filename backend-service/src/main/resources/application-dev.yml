@@ -5,15 +5,15 @@ spring:
   devtools:
     add-properties: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/backend
+    url: jdbc:postgresql://localhost:5432/backend_spring_boot
     username: postgres
     password: 123456
-    jpa:
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.PostgreSQLDialect
-      show-sql: false
+  jpa:
+    properties:
       hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
         ddl-auto: update
 # application-dev.yml
 springdoc:
