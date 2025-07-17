@@ -11,6 +11,7 @@ import vn.tqkhanhsn.controller.request.UserCreationRequest;
 import vn.tqkhanhsn.controller.request.UserPasswordRequest;
 import vn.tqkhanhsn.controller.request.UserUpdateRequest;
 import vn.tqkhanhsn.controller.response.UserResponse;
+import vn.tqkhanhsn.exception.ResourceNotFoundException;
 import vn.tqkhanhsn.model.AddressEntity;
 import vn.tqkhanhsn.model.UserEntity;
 import vn.tqkhanhsn.repository.AddressRepository;
@@ -85,11 +86,50 @@ public class UserServiceImpl implements UserService {
             addressRepository.saveAll(addresses);
             log.info("Saved addresses: {}", addresses);
         }
-        return 1;
+        return userEntity.getId();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void update(UserUpdateRequest req) {
+        log.info("Update User with request: {}", req);
+        UserEntity userEntity = getUserById(req.getId());
+        userEntity.setFirstName(req.getFirstName());
+        userEntity.setLastName(req.getLastName());
+        userEntity.setBirthDate(req.getBirthDate());
+        userEntity.setUsername(req.getUsername());
+        userEntity.setEmail(req.getEmail());
+        userEntity.setPhone(req.getPhone());
+        userEntity.setGender(req.getGender());
+
+        userRepository.save(userEntity);
+        log.info("Updated user: {}", userEntity);
+
+        List<AddressEntity> addresses = new ArrayList<>();
+
+        req.getAddresses().forEach(address -> {
+            AddressEntity addressEntity = addressRepository.findByUserIdAndAddressType(userEntity.getId(), address.getAddressType());
+            if (addressEntity == null) {
+                addressEntity = new  AddressEntity();
+
+            }
+
+            addressEntity.setApartmentNumber(address.getApartmentNumber());
+            addressEntity.setFloor(address.getFloor());
+            addressEntity.setBuilding(address.getBuilding());
+            addressEntity.setStreetNumber(address.getStreetNumber());
+            addressEntity.setStreet(address.getStreet());
+            addressEntity.setCity(address.getCity());
+            addressEntity.setCountry(address.getCountry());
+            addressEntity.setAddressType(address.getAddressType());
+            addressEntity.setUserId(userEntity.getId());
+            addresses.add(addressEntity);
+        });
+
+        addressRepository.saveAll(addresses);
+        log.info("Updated addresses: {}", addresses);
+
+
 
     }
 
@@ -101,5 +141,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
 
+    }
+
+    private UserEntity getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: "));
     }
 }

@@ -9,6 +9,7 @@ import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
+import vn.tqkhanhsn.common.Gender;
 import vn.tqkhanhsn.common.UserStatus;
 import vn.tqkhanhsn.common.UserType;
 
@@ -30,8 +31,10 @@ public class UserEntity {
     @Column(name="lastName", length = 255)
     private String lastName;
 
-    @Column(name="gender", length = 255)
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name="gender")
+    private Gender gender;
 
     @Column(name="date_of_birth")
     @Temporal(TemporalType.DATE)
