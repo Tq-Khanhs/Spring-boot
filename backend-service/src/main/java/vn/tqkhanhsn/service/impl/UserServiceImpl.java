@@ -150,7 +150,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long id) {
-
+        log.info("Deleting user with id: {}", id);
+        UserEntity userEntity = getUserById(id);
+        userEntity.setStatus(UserStatus.INACTIVE);
+        userRepository.save(userEntity);
+        log.info("Deleted user: {}", userEntity);
     }
 
     private UserEntity getUserById(Long id) {

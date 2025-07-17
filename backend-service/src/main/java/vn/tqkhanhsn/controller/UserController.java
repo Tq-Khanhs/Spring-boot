@@ -49,17 +49,17 @@ public class UserController {
         return result;
     }
 
-//    @Operation(summary = "Delete user", description = "API to delete a user by ID")
-//    @DeleteMapping("/del/{id}")
-//    public Map<String, Object> deleteUser(@PathVariable Long id) {
-//        log.info("Deleting user with ID: {}", id);
-//        userService.delete(id);
-//        Map<String, Object> result = new LinkedHashMap<>();
-//        result.put("status", HttpStatus.ACCEPTED.value());
-//        result.put("message", "User has been successfully deleted");
-//        result.put("data", "");
-//        return result;
-//    }
+    @Operation(summary = "Delete user", description = "API to delete a user by ID")
+    @DeleteMapping("/del/{id}")
+    public Map<String, Object> deleteUser(@PathVariable Long id) {
+        log.info("Deleting user with ID: {}", id);
+        userService.delete(id);
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("status", HttpStatus.RESET_CONTENT.value());
+        result.put("message", "User has been successfully deleted");
+        result.put("data", "");
+        return result;
+    }
 
     @Operation(summary = "Change user password", description = "API to change user password")
     @PatchMapping("/change-pwd")
@@ -67,7 +67,7 @@ public class UserController {
         log.info("Changing password for user with request: {}", request);
         userService.changePassword(request);
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("status", HttpStatus.ACCEPTED.value());
+        result.put("status", HttpStatus.NO_CONTENT.value());
         result.put("message", "User password has been successfully changed");
         result.put("data", "");
         return result;
