@@ -3,6 +3,7 @@ package vn.tqkhanhsn.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.tqkhanhsn.common.UserStatus;
@@ -28,6 +29,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
+    private final PasswordEncoder passwordEncoder;
+
     @Override
     public List<UserResponse> findAll() {
 
@@ -135,6 +138,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(UserPasswordRequest req) {
+        log.info("Changing password for user with request: {}", req);
+        UserEntity userEntity = getUserById(req.getId());
+        if(req.getPassword().equals(req.getConfirmPassword())) {
+            userEntity.setPassword(passwordEncoder.encode(req.getPassword()));
+        }
+        userRepository.save(userEntity);
+        log.info("Change password user: {}", userEntity);
 
     }
 

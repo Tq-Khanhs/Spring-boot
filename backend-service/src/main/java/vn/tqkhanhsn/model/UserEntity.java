@@ -54,12 +54,12 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name="type", length = 255)
+    @Column(name="type")
     private UserType type;
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name="status", length = 255)
+    @Column(name="status")
     private UserStatus status;
 
     @Column(name="createdAt", length = 255)
