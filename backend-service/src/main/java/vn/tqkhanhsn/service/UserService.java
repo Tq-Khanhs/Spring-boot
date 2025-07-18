@@ -3,12 +3,13 @@ package vn.tqkhanhsn.service;
 import vn.tqkhanhsn.controller.request.UserCreationRequest;
 import vn.tqkhanhsn.controller.request.UserPasswordRequest;
 import vn.tqkhanhsn.controller.request.UserUpdateRequest;
+import vn.tqkhanhsn.controller.response.UserPageResponse;
 import vn.tqkhanhsn.controller.response.UserResponse;
 
 import java.util.List;
 
 public interface UserService {
-    List<UserResponse> findAll();
+    UserPageResponse findAll(String keyword, String sort, int page, int size);
     UserResponse findById(Long id);
     UserResponse findByUsername(String username);
     UserResponse findByEmail(String email);

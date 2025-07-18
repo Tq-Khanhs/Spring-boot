@@ -3,6 +3,7 @@ package vn.tqkhanhsn.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.juli.logging.Log;
@@ -12,10 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import vn.tqkhanhsn.controller.request.UserCreationRequest;
 import vn.tqkhanhsn.controller.request.UserPasswordRequest;
 import vn.tqkhanhsn.controller.request.UserUpdateRequest;
+import vn.tqkhanhsn.controller.response.UserPageResponse;
+import vn.tqkhanhsn.controller.response.UserResponse;
 import vn.tqkhanhsn.service.UserService;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -70,6 +74,35 @@ public class UserController {
         result.put("status", HttpStatus.NO_CONTENT.value());
         result.put("message", "User password has been successfully changed");
         result.put("data", "");
+        return result;
+    }
+
+
+    @Operation(summary = "Get user detail", description = "API to get user detail by ID")
+    @GetMapping("/{userId}")
+    public Map<String, Object> getUserDetail(@PathVariable Long userId) {
+        log.info("Getting user detail for user ID: {}", userId);
+        UserResponse userDetail =  userService.findById(userId);
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("status", HttpStatus.OK.value());
+        result.put("message", "User detail has been successfully retrieved");
+        result.put("data", userDetail);
+        return result;
+    }
+
+    @Operation(summary = "get list of users", description = "API to get list of users")
+    @GetMapping("/list")
+    public Map<String, Object> getUsers(@RequestParam (required = false) String keyword,
+                                        @RequestParam (required = false) String sort,
+                                        @RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "20") int size) {
+        log.info("Getting list of users");
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("status", HttpStatus.OK.value());
+        result.put("message", "List of users has been successfully retrieved");
+        result.put("data", userService.findAll(keyword, sort, page, size));
         return result;
     }
 
