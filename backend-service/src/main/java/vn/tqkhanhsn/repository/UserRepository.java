@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity,Long> {
-    @Query("SELECT u FROM UserEntity u WHERE (" +
+    @Query("SELECT u FROM UserEntity u WHERE u.status = 'ACTIVE' AND (" +
             "lower(u.firstName) LIKE lower(CONCAT('%', :keyword, '%')) OR " +
             "lower(u.lastName) LIKE lower(CONCAT('%', :keyword, '%')) OR " +
             "lower(u.username) LIKE lower(CONCAT('%', :keyword, '%')) OR " +
